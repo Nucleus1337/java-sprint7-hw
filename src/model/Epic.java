@@ -9,7 +9,7 @@ import static model.TaskType.EPIC;
 
 public class Epic extends Task {
     private final List<Long> subtaskId = new ArrayList<>();
-    private final LocalDateTime endDate = null;
+    private LocalDateTime endDate;
 
     public Epic(String name, String description, TaskStatus status, long id) {
         super(name, description, status, id);
@@ -37,6 +37,14 @@ public class Epic extends Task {
 
     public void clearSubtaskId() {
         subtaskId.clear();
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
     }
 
     @Override

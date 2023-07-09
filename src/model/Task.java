@@ -150,11 +150,11 @@ public class Task {
         return startTime.plusMinutes(duration);
     }
 
-    protected void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    protected void setDuration(int duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 }

@@ -3,10 +3,8 @@ package service;
 import model.*;
 import util.Managers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static util.Sequence.getNextId;
@@ -127,6 +125,7 @@ public class InMemoryTaskManager implements TaskManager {
         historyManager.remove(subtaskId);
 
         calcEpicStatus(epic);
+        calcEpicTime(epic);
     }
 
     @Override
@@ -151,6 +150,7 @@ public class InMemoryTaskManager implements TaskManager {
         updateMainTaskInfo(subtask, subtaskForUpdate);
 
         calcEpicStatus(epicIdToEpic.get(subtaskForUpdate.getEpicId()));
+        calcEpicTime(epicIdToEpic.get(subtaskForUpdate.getEpicId()));
     }
 
     @Override
@@ -196,7 +196,34 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private void calcEpicTime(Epic epic) {
+        LocalDateTime minSubtaskStartTime;
+        LocalDateTime maxSubtaskEndTime;
 
+        List<Subtask> subtasks = getAllSubtasksByEpicId(epic.getId());
+
+        int epicDuration = subtasks.stream()
+                .map(Subtask::getDuration)
+                .mapToInt(Integer::intValue)
+                .sum();
+
+        try {
+            minSubtaskStartTime = subtasks.stream()
+                    .map(Subtask::getStartTime)
+                    .min(LocalDateTime::compareTo)
+                    .orElseThrow();
+
+            maxSubtaskEndTime = subtasks.stream()
+                    .map(Subtask::getEndTime)
+                    .max(LocalDateTime::compareTo)
+                    .orElseThrow();
+        } catch (NoSuchElementException e) {
+            System.out.println("Не установлено время выполнение для подзадачи");
+            return;
+        }
+
+        epic.setStartTime(minSubtaskStartTime);
+        epic.setDuration(epicDuration);
+        epic.setEndDate(maxSubtaskEndTime);
     }
 
     @Override
