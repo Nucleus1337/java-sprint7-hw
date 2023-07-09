@@ -13,16 +13,16 @@ public interface TaskManager {
      *
      * @param task объект класса Task
      */
-    void createTask(Task task);
+    Task createTask(Task task);
 
     /**
      * Создать эпик-задачу
      *
      * @param epic объект класса Epic
      */
-    void createEpic(Epic epic);
+    Epic createEpic(Epic epic);
 
-    void createSubtask(Subtask subtask);
+    Subtask createSubtask(Subtask subtask);
 
     void clearAllTasks();
 

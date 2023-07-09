@@ -11,7 +11,7 @@ public class Main {
         TaskManager taskManager = Managers.getDefault();
 
         taskManager.createTask(new Task("Task1", "TaskDesc1", "2022-01-01-10-24", 30)); /*1*/
-        taskManager.createTask(new Task("Task2", "TaskDesc2", "2022-01-01-12-46", 15)); /*2*/
+        taskManager.createTask(new Task("Task2", "TaskDesc2", "2022-01-01-10-46", 15)); /*2*/
 
         taskManager.createEpic(new Epic("Epic1", "Epic1 desc")); /*3*/
         taskManager.createSubtask(new Subtask("Subtask1 Epic1", "Subtask1 Epic1 desc", 3,

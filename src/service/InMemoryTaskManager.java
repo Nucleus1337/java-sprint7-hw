@@ -17,28 +17,38 @@ public class InMemoryTaskManager implements TaskManager {
     private final HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
-    public void createTask(Task task) {
+    public Task createTask(Task task) {
         task.setId(getNextId());
         task.setStatus(NEW);
 
         taskIdToTask.put(task.getId(), task);
+
+        isIntersection(task);
+
+        return task;
     }
 
     @Override
-    public void createEpic(Epic epic) {
+    public Epic createEpic(Epic epic) {
         epic.setId(getNextId());
         epic.setStatus(NEW);
 
         epicIdToEpic.put(epic.getId(), epic);
+
+        return epic;
     }
 
     @Override
-    public void createSubtask(Subtask subtask) {
+    public Subtask createSubtask(Subtask subtask) {
         subtask.setId(getNextId());
         subtask.setStatus(NEW);
 
         subtaskIdToSubtask.put(subtask.getId(), subtask);
         epicIdToEpic.get(subtask.getEpicId()).addSubtaskId(subtask.getId());
+
+        isIntersection(subtask);
+
+        return subtask;
     }
 
     @Override
@@ -142,6 +152,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateTask(Task task) {
         updateMainTaskInfo(task, taskIdToTask.get(task.getId()));
+        isIntersection(task);
     }
 
     @Override
@@ -151,6 +162,8 @@ public class InMemoryTaskManager implements TaskManager {
 
         calcEpicStatus(epicIdToEpic.get(subtaskForUpdate.getEpicId()));
         calcEpicTime(epicIdToEpic.get(subtaskForUpdate.getEpicId()));
+
+        isIntersection(subtask);
     }
 
     @Override
@@ -224,6 +237,32 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setStartTime(minSubtaskStartTime);
         epic.setDuration(epicDuration);
         epic.setEndDate(maxSubtaskEndTime);
+    }
+
+    public Set<Task> getPrioritizedTasks() {
+        final Comparator<Task> comparator = Comparator.comparing(Task::getStartTime,
+                Comparator.nullsLast(Comparator.naturalOrder()));
+        final Set<Task> prioritizedTasks = new TreeSet<>(comparator);
+
+        prioritizedTasks.addAll(getAllTasks());
+        prioritizedTasks.addAll(getAllSubtasks());
+
+        return prioritizedTasks;
+    }
+
+    public void isIntersection(Task task) {
+        boolean isIntersection = getPrioritizedTasks().stream().anyMatch(t -> t.getStartTime() != null
+                && t.getId() != task.getId()
+                && (task.getStartTime().isAfter(t.getStartTime()) && task.getStartTime().isBefore(t.getEndTime())
+                    || task.getEndTime().isAfter(t.getStartTime()) && task.getEndTime().isBefore(t.getEndTime())
+                    || task.getStartTime().equals(t.getStartTime())
+                    || task.getStartTime().equals(t.getEndTime())
+                    || task.getEndTime().equals(t.getStartTime())
+                    || task.getEndTime().equals(t.getEndTime())));
+
+        if (isIntersection) {
+            System.out.println("У задачи есть пересечения");
+        }
     }
 
     @Override
