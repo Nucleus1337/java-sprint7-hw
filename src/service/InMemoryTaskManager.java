@@ -261,7 +261,8 @@ public class InMemoryTaskManager implements TaskManager {
                     || task.getEndTime().equals(t.getEndTime())));
 
         if (isIntersection) {
-            System.out.println("У задачи есть пересечения");
+//            System.out.println("У задачи есть пересечения");
+            throw new IllegalStateException("У задачи есть пересечения");
         }
     }
 

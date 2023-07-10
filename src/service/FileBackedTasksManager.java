@@ -306,16 +306,16 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public static void main(String[] args) {
         FileBackedTasksManager manager = loadFromFile(new File("resources/fileToSave.csv"));
 
-//        manager.createTask(new Task("Task1", "TaskDesc1", "2022-01-01-12-46", 15)); /*1*/
-//        manager.createEpic(new Epic("Epic1", "Epic1 desc")); /*2*/
-//        manager.createSubtask(new Subtask("Subtask1 Epic1", "Subtask1 Epic1 desc", 2, "2022-01-01-12-46", 15)); /*3*/
-//
-//        manager.updateTask(new Task("Task1", "TaskDesc1", DONE, 1));
-//
-//        manager.getEpicById(2);
-//        manager.getTaskById(1);
-//
-//        manager.createEpic(new Epic("Epic4", "Epic4 desc")); /*4*/
+        manager.createTask(new Task("Task1", "TaskDesc1", "2022-01-01-12-46", 15)); /*1*/
+        manager.createEpic(new Epic("Epic1", "Epic1 desc")); /*2*/
+        manager.createSubtask(new Subtask("Subtask1 Epic1", "Subtask1 Epic1 desc", 2, "2022-01-01-12-46", 15)); /*3*/
+
+        manager.updateTask(new Task("Task1", "TaskDesc1", DONE, 1));
+
+        manager.getEpicById(2);
+        manager.getTaskById(1);
+
+        manager.createEpic(new Epic("Epic4", "Epic4 desc")); /*4*/
 
         System.out.println("=====CREATED=====");
         System.out.println("TASKS\n" + manager.getAllTasks());
