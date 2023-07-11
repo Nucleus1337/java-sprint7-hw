@@ -13,7 +13,8 @@ public class Epic extends Task {
 
     /*Разве неверная парадигма того, что эпик является оболочкой для Сабтасков?
     * не добавил сюда поле для времени, потому мне оно кажется бессмысленным.
-    * при добавлении сабтака нужные поля пересчитаются*/
+    * при добавлении сабтака нужные поля пересчитаются.
+    * Если неправ, то добавлю*/
     public Epic(String name, String description, TaskStatus status, long id) {
         super(name, description, status, id);
         super.setType(EPIC);
