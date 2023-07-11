@@ -9,15 +9,13 @@ import static model.TaskType.EPIC;
 
 public class Epic extends Task {
     private final List<Long> subtaskId = new ArrayList<>();
-    private LocalDateTime endDate;
+    private LocalDateTime endTime;
 
+    /*Разве неверная парадигма того, что эпик является оболочкой для Сабтасков?
+    * не добавил сюда поле для времени, потому мне оно кажется бессмысленным.
+    * при добавлении сабтака нужные поля пересчитаются*/
     public Epic(String name, String description, TaskStatus status, long id) {
         super(name, description, status, id);
-        super.setType(EPIC);
-    }
-
-    public Epic(String name, String description, TaskStatus status) {
-        super(name, description, status);
         super.setType(EPIC);
     }
 
@@ -39,12 +37,12 @@ public class Epic extends Task {
         subtaskId.clear();
     }
 
-    public LocalDateTime getEndDate() {
-        return endDate;
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
-        this.endDate = endDate;
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     @Override

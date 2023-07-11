@@ -2,19 +2,21 @@ package service;
 
 import model.*;
 import util.Sequence;
-import util.TaskUtil;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static model.TaskStatus.*;
-import static model.TaskType.*;
+import static model.TaskStatus.DONE;
+import static model.TaskType.EPIC;
+import static model.TaskType.SUBTASK;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
     private final static String PATH_TO_SAVE = "resources/";
@@ -186,9 +188,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 break;
             case SUBTASK:
                 tasksManager.getSubtaskIdToSubtask().put(taskId, (Subtask) task);
+                tasksManager.prioritizedTasks.add(task);
                 break;
             default:
                 tasksManager.getTaskIdToTask().put(taskId, task);
+                tasksManager.prioritizedTasks.add(task);
         }
     }
 
@@ -296,12 +300,17 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return history;
     }
 
+    @Override
+    public List<Task> getPrioritizedTasks() {
+        return super.getPrioritizedTasks();
+    }
+
     /**
      * запускает выполнение
      * - рассматриваем работу в нормальных условиях
      * -- если файл еще не существует, то следует разкоментировать создание тасков (файл будет создан автоматом)
      * -- если файл создан следует закомментировать создание или создавать что-то иное
-     * @param args
+     *
      */
     public static void main(String[] args) {
         FileBackedTasksManager manager = loadFromFile(new File("resources/fileToSave.csv"));
